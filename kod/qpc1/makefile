@@ -1,12 +1,12 @@
 .SUFFIXES:
 
 CXX := g++
-TARGET = main.out
-SRCS = main.cpp def.cpp
-OBJS = main.o def.o
-HDRS = dek.hpp
 CFLAGS := -std=c++20 -Wall -Wextra -Werror -Wpedantic
 LIBS := -lm
+SRCS := main.cpp def.cpp
+HDRS := dek.hpp
+OBJS := main.o def.o
+TARGET := main.out
 
 all: gotowe
 
@@ -14,7 +14,7 @@ all: gotowe
 	$(CXX) $(CFLAGS) -o $@ $< -c
 
 $(TARGET): $(OBJS)
-	$(CXX) $(OBJS) $(LIBS) -o $@
+	$(CXX) $^ $(LIBS) -o $@
 
 gotowe: $(TARGET)
 	./$<
