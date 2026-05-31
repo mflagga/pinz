@@ -1,29 +1,54 @@
+ifeq ($(OS),Windows_NT)
+	PC := python
+	RM := del /q
+	VR := @echo nie ma valgrinda na windowsie
+else
+	ifdef VIRTUAL_ENV
+		PC := python
+	else
+		PC := python3
+	endif
+	RM := rm -f
+	VR := valgrind ./$(EXEC)
+endif
+
 .SUFFIXES:
 
 CXX := g++
 CFLAGS := -std=c++20 -Wall -Wextra -Werror -Wpedantic
-LIBS := -lm
+LIBS := -lm -lgsl -lgslcblas
 SRCS := main.cpp def.cpp
 HDRS := dek.hpp
 OBJS := main.o def.o
-TARGET := main.out
+EXEC := main.out
+DATA := dyspfile.csv kxfile.csv
+MEDIA := dyspfile.png
+SCRIPT := plot.py
 
-all: gotowe
+all: $(MEDIA)
 
 %.o: %.cpp $(HDRS)
 	$(CXX) $(CFLAGS) -o $@ $< -c
 
-$(TARGET): $(OBJS)
+$(EXEC): $(OBJS)
 	$(CXX) $^ $(LIBS) -o $@
 
-gotowe: $(TARGET)
+$(DATA): $(EXEC)
 	./$<
 
-safe: $(TARGET)
-	valgrind ./$<
+$(MEDIA): $(SCRIPT) $(DATA)
+	$(PC) $<
+
+gotowe: $(EXEC)
+	./$<
+
+safe: $(EXEC)
+	$(VR)
 
 clean:
-	rm -f $(OBJS)
-	rm -f $(TARGET)
+	$(RM) $(OBJS)
+	$(RM) $(EXEC)
+	$(RM) $(DATA)
+	$(RM) $(MEDIA)
 
 .PHONY: clean gotowe all safe
