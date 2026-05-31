@@ -9,7 +9,7 @@ else
 		PC := python3
 	endif
 	RM := rm -f
-	VR := valgrind ./$(EXEC)
+	VR = valgrind ./$(EXEC)
 endif
 
 .SUFFIXES:
