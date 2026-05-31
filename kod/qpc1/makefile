@@ -15,7 +15,7 @@ endif
 .SUFFIXES:
 
 CXX := g++
-CFLAGS := -std=c++20 -Wall -Wextra -Werror -Wpedantic
+CFLAGS := -std=c++20 -Wall -Wextra -Werror -Wpedantic -I/usr/include/eigen3
 LIBS := -lm -lgsl -lgslcblas
 SRCS := main.cpp def.cpp
 HDRS := dek.hpp

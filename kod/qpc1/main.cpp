@@ -76,6 +76,8 @@ int main(){
     }
     fclose(dyspfile);
 
+    // uogólniony problem własny
+
     // czystki 
     delete [] x;
     delete [] y;

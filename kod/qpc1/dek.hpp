@@ -6,6 +6,8 @@
 #include <complex>
 #include <gsl/gsl_eigen.h>
 #include <gsl/gsl_sort_vector.h>
+#include <Eigen/Dense>
+#include <Eigen/Eigenvalues>
 
 typedef std::complex<double> cmp;
 const cmp I(0.0,1.0);
