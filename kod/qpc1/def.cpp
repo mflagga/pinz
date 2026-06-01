@@ -37,3 +37,35 @@ void diagRealSymmEvals(cmp *H, int N, cmp *eval){
     gsl_matrix_free(Hgsl);
     gsl_vector_free(evalgsl);
 }
+
+void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
+    // macierz B
+    double inv_alpha = 1.0/alpha;
+    Eigen::VectorXcd Binv_diag(2*Ny);
+    Binv_diag.head(Ny).setOnes();
+    Binv_diag.tail(Ny).setConstant(inv_alpha);
+    // maceirz H
+    Eigen::MatrixXcd H = Eigen::MatrixXcd::Zero(Ny,Ny);
+    H.diagonal().setConstant(4.0*alpha);
+    H.diagonal(-1).setConstant(-alpha);
+    H.diagonal(+1).setConstant(-alpha);
+    // maceirz A
+    Eigen::MatrixXcd A = Eigen::MatrixXcd::Zero(2*Ny,2*Ny);
+    A.block(0,Ny,Ny,Ny)=Eigen::MatrixXcd::Identity(Ny,Ny);
+    A.block(Ny,0,Ny,Ny)=-alpha*Eigen::MatrixXcd::Identity(Ny,Ny);
+    A.block(Ny,Ny,Ny,Ny)=E*Eigen::MatrixXcd::Identity(Ny,Ny) - H;
+    // iloczyn
+    Eigen::MatrixXcd BinvA = Binv_diag.asDiagonal() * A;
+    // rozwiązanie
+    Eigen::ComplexEigenSolver<Eigen::MatrixXcd> solver;
+    solver.compute(BinvA);
+    // wektory i wartości wł
+    Eigen::VectorXcd evals_eig = solver.eigenvalues();
+    Eigen::MatrixXcd evecs_eig = solver.eigenvectors();
+    for (int i=0;i<2*Ny;i++){
+        evals[i] = evals_eig(i);
+        for (int j=0;j<2*Ny;j++){
+            evecs[i*2*Ny+j] = evecs_eig(j,i);
+        }
+    }
+}

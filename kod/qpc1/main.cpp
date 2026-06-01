@@ -78,6 +78,22 @@ int main(){
 
     // uogólniony problem własny
 
+    cmp *evals = new cmp[2*Ny];
+    cmp *evecs = new cmp[4*Ny*Ny];
+    upw_inv(0.02,alpha,Ny,evals,evecs);
+
+    FILE *lfile=fopen("lfile.csv","w");
+    FILE *ufile=fopen("ufile.csv","w");
+    for (int i=0;i<2*Ny;i++){
+        if (i!=0) fprintf(lfile,",");
+        fprintf(lfile,"%lf",std::abs(evals[i]));
+        for (int j=0;j<2*Ny;j++){
+            fprintf(ufile,"%lf,%lf\n",std::real(evecs[i*2*Ny+j]),std::imag(evecs[i*2*Ny+j]));
+        }
+    }
+    fclose(lfile);
+    fclose(ufile);
+
     // czystki 
     delete [] x;
     delete [] y;
@@ -87,6 +103,8 @@ int main(){
     delete [] H;
     for (int i=0;i<Nk;i++) delete [] dysp[i];
     delete [] dysp;
+    delete [] evals;
+    delete [] evecs;
 
     // return zero
     return 0;
