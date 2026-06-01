@@ -21,7 +21,7 @@ SRCS := main.cpp def.cpp
 HDRS := dek.hpp
 OBJS := main.o def.o
 EXEC := main.out
-DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv
+DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv kx2vfile.csv misc.csv
 MEDIA := dyspfile.png lfile.png uRe.png uIm.png popU.png
 SCRIPT := plot.py
 

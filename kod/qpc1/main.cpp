@@ -16,6 +16,7 @@ int main(){
     const double ymax=-ymin;
     // const double sigmax=300.0;
     // const double sigmay=300.0;
+    const double E=0.4*eV_to_hartree;
 
     // parametry symulacji
     const int Nx=1*10-1;
@@ -28,9 +29,9 @@ int main(){
 
     // alokacja / inicjalizacja
     double *x=new double[Nx];
-    for (int i=0;i<Nx;i++) x[i]=xmin+i*dx;
+    for (int i=0;i<Nx;i++) x[i]=xmin+(i+1)*dx;
     double *y=new double[Ny];
-    for (int j=0;j<Ny;j++) y[j]=ymin+j*dx;
+    for (int j=0;j<Ny;j++) y[j]=ymin+(j+1)*dx;
     double *V=new double[Nx*Ny]{};
     cmp **psi = new cmp*[Nx];
     for (int i=0;i<Nx;i++) psi[i] = new cmp[Ny]{};
@@ -80,9 +81,16 @@ int main(){
 
     cmp *evals = new cmp[Ny];
     cmp *evecs = new cmp[Ny*Ny];
-    upw_inv(0.2*eV_to_hartree,alpha,Ny,evals,evecs);
+    upw_inv(E,alpha,Ny,evals,evecs);
 
-    /* TU TRZEBA UNORMOWAC FUNCKJE WLASNE */
+    // normowanie funckji wlasnych
+    double sum, invsqrtsum;
+    for (int i=0;i<Ny;i++){
+        sum=0.0;
+        for (int j=0;j<Ny;j++) sum += std::norm(evecs[i*Ny+j])*dx;
+        invsqrtsum=1.0/std::sqrt(sum);
+        for (int j=0;j<Ny;j++) evecs[i*Ny+j]*=invsqrtsum;
+    }
 
     // znalezienie modów poprzecznych
     int liczba=0;
@@ -127,10 +135,13 @@ int main(){
         }
     }
 
-    // prędkości
+    // prędkości i pędy
     cmp is;
     double *v = new double[liczba];
+    double *kx2 = new double[liczba];
     for (int i=0;i<liczba;i++){
+        // pęd
+        kx2[i]=std::imag(std::log(evals_pop[i])/dx);
         // iloczyn skalarny
         is=0.0+0.0*I;
         for (int j=0;j<Ny;j++){
@@ -138,8 +149,17 @@ int main(){
         }
         // predkosc
         v[i]=-2.0*dx*(-alpha)*std::imag(evals_pop[i]*is);
-        printf("%lf\n",v[i]);
+        // printf("%lf\n",v[i]);
     }
+
+    // zapisanie 
+    FILE *kx2vfile=fopen("kx2vfile.csv","w");
+    for (int i=0;i<liczba;i++) fprintf(kx2vfile,"%e,%e\n",kx2[i]*nm_to_bohr,v[i]);
+    fclose(kx2vfile);
+
+    FILE *misc=fopen("misc.csv","w");
+    fprintf(misc,"%lf,%d,%d,%e,%e",E*hartree_to_eV,Ny,Nx,xmin*bohr_to_nm,ymin*bohr_to_nm);
+    fclose(misc);
 
     // czystki 
     delete [] x;
@@ -156,6 +176,7 @@ int main(){
     delete [] poprzeczne;
     delete [] evals_pop;
     delete [] evecs_pop;
+    delete [] kx2;
 
     // return zero
     return 0;

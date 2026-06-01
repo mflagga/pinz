@@ -43,7 +43,7 @@ void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
     double inv_alpha = 1.0/alpha;
     Eigen::VectorXcd Binv_diag(2*Ny);
     Binv_diag.head(Ny).setOnes();
-    Binv_diag.tail(Ny).setConstant(inv_alpha);
+    Binv_diag.tail(Ny).setConstant(-inv_alpha);
     // maceirz H
     Eigen::MatrixXcd H = Eigen::MatrixXcd::Zero(Ny,Ny);
     H.diagonal().setConstant(4.0*alpha);
@@ -52,7 +52,7 @@ void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
     // maceirz A
     Eigen::MatrixXcd A = Eigen::MatrixXcd::Zero(2*Ny,2*Ny);
     A.block(0,Ny,Ny,Ny)=Eigen::MatrixXcd::Identity(Ny,Ny);
-    A.block(Ny,0,Ny,Ny)=-alpha*Eigen::MatrixXcd::Identity(Ny,Ny);
+    A.block(Ny,0,Ny,Ny)=alpha*Eigen::MatrixXcd::Identity(Ny,Ny);
     A.block(Ny,Ny,Ny,Ny)=E*Eigen::MatrixXcd::Identity(Ny,Ny) - H;
     // iloczyn
     Eigen::MatrixXcd BinvA = Binv_diag.asDiagonal() * A;
