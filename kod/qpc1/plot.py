@@ -8,7 +8,7 @@ def wczytaj(*nazwy): # funkcja do wczytywania plikow od clauda
         globals()[nazwa] = np.loadtxt(nazwa + ".csv", delimiter=',')
 
 # wczytanie plików
-wczytaj("dyspfile","kxfile","lfile","ufile")
+wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile")
 
 Ny = len(lfile)//2
 

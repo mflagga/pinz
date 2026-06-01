@@ -80,19 +80,64 @@ int main(){
 
     cmp *evals = new cmp[2*Ny];
     cmp *evecs = new cmp[4*Ny*Ny];
-    upw_inv(0.02,alpha,Ny,evals,evecs);
+    upw_inv(0.2*eV_to_hartree,alpha,Ny,evals,evecs);
 
+    // znalezienie modów poprzecznych
+    int liczba=0;
+    bool *poprzeczne = new bool[2*Ny]{};
+    double eps=1e-4;
+    for (int i=0;i<2*Ny;i++){
+        if (std::abs(evals[i])>=1.0-eps && std::abs(evals[i])<=1.0+eps){
+            poprzeczne[i]=true;
+            liczba++;
+        }
+    }
+    printf("Liczba modów poprzecznych: %d\n",liczba);
+
+    // zapisanie
     FILE *lfile=fopen("lfile.csv","w");
     FILE *ufile=fopen("ufile.csv","w");
+    FILE *poprzecznefile=fopen("poprzecznefile.csv","w");
     for (int i=0;i<2*Ny;i++){
         if (i!=0) fprintf(lfile,",");
         fprintf(lfile,"%lf",std::abs(evals[i]));
+        if (i!=0) fprintf(poprzecznefile,",");
+        fprintf(poprzecznefile,"%d",poprzeczne[i]);
         for (int j=0;j<2*Ny;j++){
             fprintf(ufile,"%lf,%lf\n",std::real(evecs[i*2*Ny+j]),std::imag(evecs[i*2*Ny+j]));
         }
     }
     fclose(lfile);
     fclose(ufile);
+    fclose(poprzecznefile);
+
+    cmp *evals_pop = new cmp[liczba];
+    cmp *evecs_pop = new cmp[liczba*2*Ny];
+
+    int l=0;
+    for (int i=0;i<2*Ny;i++){
+        if (poprzeczne[i]){
+            evals_pop[l]=evals[i];
+            for (int j=0;j<2*Ny;j++){
+                evecs_pop[l*2*Ny+j] = evecs[i*2*Ny+j];
+            }
+            l++;
+        }
+    }
+
+    // prędkości
+    cmp is;
+    double *v = new double[liczba];
+    for (int i=0;i<liczba;i++){
+        // iloczyn skalarny
+        is=0.0+0.0*I;
+        for (int j=0;j<2*Ny;j++){
+            is += evecs_pop[i*2*Ny+j]*std::conj(evecs_pop[i*2*Ny+j]);
+        }
+        // predkosc
+        v[i]=-2.0*dx*(-alpha)*std::imag(evals_pop[i]*is);
+        // printf("%lf\n",v[i]);
+    }
 
     // czystki 
     delete [] x;
@@ -105,6 +150,10 @@ int main(){
     delete [] dysp;
     delete [] evals;
     delete [] evecs;
+    delete [] v;
+    delete [] poprzeczne;
+    delete [] evals_pop;
+    delete [] evecs_pop;
 
     // return zero
     return 0;

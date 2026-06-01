@@ -69,3 +69,14 @@ void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
         }
     }
 }
+
+void MrazyM(cmp *A, cmp *B, cmp *C, int n, int m, int p){
+    for (int i=0;i<n;i++){
+        for (int j=0;j<p;j++){
+            C[i*p+j]=0.0;
+            for (int k=0;k<m;k++){
+                C[i*p+j] += A[i*m+k]*B[k*p+j];
+            }
+        }
+    }
+}
