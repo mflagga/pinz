@@ -62,10 +62,10 @@ void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
     // wektory i wartości wł
     Eigen::VectorXcd evals_eig = solver.eigenvalues();
     Eigen::MatrixXcd evecs_eig = solver.eigenvectors();
-    for (int i=0;i<2*Ny;i++){
+    for (int i=0;i<Ny;i++){
         evals[i] = evals_eig(i);
-        for (int j=0;j<2*Ny;j++){
-            evecs[i*2*Ny+j] = evecs_eig(j,i);
+        for (int j=0;j<Ny;j++){
+            evecs[i*Ny+j] = evecs_eig(j,i);
         }
     }
 }

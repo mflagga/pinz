@@ -78,15 +78,17 @@ int main(){
 
     // uogólniony problem własny
 
-    cmp *evals = new cmp[2*Ny];
-    cmp *evecs = new cmp[4*Ny*Ny];
-    upw_inv(0.4*eV_to_hartree,alpha,Ny,evals,evecs);
+    cmp *evals = new cmp[Ny];
+    cmp *evecs = new cmp[Ny*Ny];
+    upw_inv(0.2*eV_to_hartree,alpha,Ny,evals,evecs);
+
+    /* TU TRZEBA UNORMOWAC FUNCKJE WLASNE */
 
     // znalezienie modów poprzecznych
     int liczba=0;
-    bool *poprzeczne = new bool[2*Ny]{};
+    bool *poprzeczne = new bool[Ny]{};
     double eps=1e-8;
-    for (int i=0;i<2*Ny;i++){
+    for (int i=0;i<Ny;i++){
         if (std::abs(evals[i])>=1.0-eps && std::abs(evals[i])<=1.0+eps){
             poprzeczne[i]=true;
             liczba++;
@@ -98,13 +100,13 @@ int main(){
     FILE *lfile=fopen("lfile.csv","w");
     FILE *ufile=fopen("ufile.csv","w");
     FILE *poprzecznefile=fopen("poprzecznefile.csv","w");
-    for (int i=0;i<2*Ny;i++){
+    for (int i=0;i<Ny;i++){
         if (i!=0) fprintf(lfile,",");
         fprintf(lfile,"%e",std::abs(evals[i]));
         if (i!=0) fprintf(poprzecznefile,",");
         fprintf(poprzecznefile,"%d",poprzeczne[i]);
-        for (int j=0;j<2*Ny;j++){
-            fprintf(ufile,"%e,%e\n",std::real(evecs[i*2*Ny+j]),std::imag(evecs[i*2*Ny+j]));
+        for (int j=0;j<Ny;j++){
+            fprintf(ufile,"%e,%e\n",std::real(evecs[i*Ny+j]),std::imag(evecs[i*Ny+j]));
         }
     }
     fclose(lfile);
@@ -112,14 +114,14 @@ int main(){
     fclose(poprzecznefile);
 
     cmp *evals_pop = new cmp[liczba];
-    cmp *evecs_pop = new cmp[liczba*2*Ny];
+    cmp *evecs_pop = new cmp[liczba*Ny];
 
     int l=0;
-    for (int i=0;i<2*Ny;i++){
+    for (int i=0;i<Ny;i++){
         if (poprzeczne[i]){
             evals_pop[l]=evals[i];
-            for (int j=0;j<2*Ny;j++){
-                evecs_pop[l*2*Ny+j] = evecs[i*2*Ny+j];
+            for (int j=0;j<Ny;j++){
+                evecs_pop[l*Ny+j] = evecs[i*Ny+j];
             }
             l++;
         }
@@ -131,8 +133,8 @@ int main(){
     for (int i=0;i<liczba;i++){
         // iloczyn skalarny
         is=0.0+0.0*I;
-        for (int j=0;j<2*Ny;j++){
-            is += evecs_pop[i*2*Ny+j]*std::conj(evecs_pop[i*2*Ny+j]);
+        for (int j=0;j<Ny;j++){
+            is += evecs_pop[i*Ny+j]*std::conj(evecs_pop[i*Ny+j]);
         }
         // predkosc
         v[i]=-2.0*dx*(-alpha)*std::imag(evals_pop[i]*is);

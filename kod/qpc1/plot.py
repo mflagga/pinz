@@ -10,10 +10,10 @@ def wczytaj(*nazwy): # funkcja do wczytywania plikow od clauda
 # wczytanie plików
 wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile")
 
-Ny = len(lfile)//2
+Ny = len(lfile)
 
-uRe = ufile[:,0].reshape(2*Ny,2*Ny)
-uIm = ufile[:,1].reshape(2*Ny,2*Ny)
+uRe = ufile[:,0].reshape(Ny,Ny)
+uIm = ufile[:,1].reshape(Ny,Ny)
 poprzecznefile = poprzecznefile.astype(bool)
 
 size = 8
@@ -58,14 +58,13 @@ plt.close()
 
 # mody poprzeczne
 # Re
+licznik=0
 plt.figure(figsize=(size,size))
-for j in range(2*Ny):
-    if (poprzecznefile[j]): plt.plot(uRe[j])
-plt.savefig("popRe.png")
-plt.close()
-# Im
-plt.figure(figsize=(size,size))
-for j in range(2*Ny):
-    if (poprzecznefile[j]): plt.plot(uIm[j])
-plt.savefig("popIm.png")
+for j in range(Ny):
+    if (poprzecznefile[j]): 
+        plt.plot(uRe[j],label=rf"$\Re(u_{{-,{licznik}}})$")
+        plt.plot(uIm[j],label=rf"$\Im(u_{{-,{licznik}}})$")
+        licznik+=1
+plt.legend()
+plt.savefig("popU.png")
 plt.close()

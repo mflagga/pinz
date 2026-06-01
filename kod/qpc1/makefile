@@ -22,7 +22,7 @@ HDRS := dek.hpp
 OBJS := main.o def.o
 EXEC := main.out
 DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv
-MEDIA := dyspfile.png lfile.png uRe.png uIm.png popRe.png popIm.png
+MEDIA := dyspfile.png lfile.png uRe.png uIm.png popU.png
 SCRIPT := plot.py
 
 all: $(MEDIA)
