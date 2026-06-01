@@ -18,11 +18,11 @@ int main(){
     // const double sigmay=300.0;
 
     // parametry symulacji
-    const int Nx=11;
-    const int Ny=21;
+    const int Nx=1*10-1;
+    const int Ny=1*20-1;
     
     // parametry wtórne
-    const double dx=(ymax-ymin)/(Ny-1);
+    const double dx=(ymax-ymin)/(Ny+1);
     // const double dy=(ymax-ymin)/(Ny-1);
     const double alpha=1.0/(2.0*m*dx*dx);
 
@@ -52,7 +52,7 @@ int main(){
         kx=-M_PI/dx + p*dk;
         // zapisanie k
         if (p!=0) fprintf(kxfile,",");
-        fprintf(kxfile,"%lf",kx*1.0/bohr_to_nm);
+        fprintf(kxfile,"%e",kx*1.0/bohr_to_nm);
         // zmiana hamiltonianu
         if (p==0){
             initHdlaKx(H,kx,Ny,alpha,dx);
@@ -70,7 +70,7 @@ int main(){
     for (int p=0;p<Nk;p++){
         for (int j=0;j<Ny;j++){
             if (j!=0) fprintf(dyspfile,",");
-            fprintf(dyspfile,"%lf",std::real(dysp[p][j])*hartree_to_eV);
+            fprintf(dyspfile,"%e",std::real(dysp[p][j])*hartree_to_eV);
         }
         fprintf(dyspfile,"\n");
     }
@@ -80,12 +80,12 @@ int main(){
 
     cmp *evals = new cmp[2*Ny];
     cmp *evecs = new cmp[4*Ny*Ny];
-    upw_inv(0.2*eV_to_hartree,alpha,Ny,evals,evecs);
+    upw_inv(0.4*eV_to_hartree,alpha,Ny,evals,evecs);
 
     // znalezienie modów poprzecznych
     int liczba=0;
     bool *poprzeczne = new bool[2*Ny]{};
-    double eps=1e-4;
+    double eps=1e-8;
     for (int i=0;i<2*Ny;i++){
         if (std::abs(evals[i])>=1.0-eps && std::abs(evals[i])<=1.0+eps){
             poprzeczne[i]=true;
@@ -100,11 +100,11 @@ int main(){
     FILE *poprzecznefile=fopen("poprzecznefile.csv","w");
     for (int i=0;i<2*Ny;i++){
         if (i!=0) fprintf(lfile,",");
-        fprintf(lfile,"%lf",std::abs(evals[i]));
+        fprintf(lfile,"%e",std::abs(evals[i]));
         if (i!=0) fprintf(poprzecznefile,",");
         fprintf(poprzecznefile,"%d",poprzeczne[i]);
         for (int j=0;j<2*Ny;j++){
-            fprintf(ufile,"%lf,%lf\n",std::real(evecs[i*2*Ny+j]),std::imag(evecs[i*2*Ny+j]));
+            fprintf(ufile,"%e,%e\n",std::real(evecs[i*2*Ny+j]),std::imag(evecs[i*2*Ny+j]));
         }
     }
     fclose(lfile);
@@ -136,7 +136,7 @@ int main(){
         }
         // predkosc
         v[i]=-2.0*dx*(-alpha)*std::imag(evals_pop[i]*is);
-        // printf("%lf\n",v[i]);
+        printf("%lf\n",v[i]);
     }
 
     // czystki 
