@@ -62,8 +62,10 @@
 
 Zaczęto od wyznaczenia relacji dyspersji dla układu jednorodnego ($V=0$). 
 W tym celu założono symetrię translacyjną wzdłuż $x$ i skupiono się na pojedynczym przekroju (komórce elementarnej).
+
 Rozwiązano problem własny oznaczony numerem (5) w treści zadania wielokrotnie dla różnych wartości $k_x$ z pierwszej strefy Brillouina -- każdorazowo otrzymując $N_y$ wartości własnych.  
 W tym celu posłużono się biblioteką \texttt{GSL} i jej funkcją \texttt{gsl\_eigen\_symm} ze względu na rzeczywistą, symetryczną postać hamiltonianu.
+
 Wykreślono poszczególne poziomy energetyczne w funkcji pędu (Wykres \ref{dyspfile}).
 
 \begin{figure}[h]
@@ -76,12 +78,15 @@ Wykreślono poszczególne poziomy energetyczne w funkcji pędu (Wykres \ref{dysp
 \section{Mody poprzeczne}
 
 Kolejnym krokiem było wyznaczenie modów poprzecznych poprzez rozwiązanie uogólnionego problemu własnego. 
+
 Ze względu na to, że \texttt{GSL} nie obsługuje zespolonych macierzy niehermitowskich zdecydowano posłużyć się biblioteką \texttt{Eigen}. 
 Zaprogramowano funkcję \texttt{upw\_inv}.
 Funkcja rozwiązuje problem poprzez najpierw odwrócenie macierzy diagonalnej B i sprowadzenie uogólnionego problemu własnego do zwykłego problemu własnego a następnie korzysta z gotowej funkcji \texttt{ComplexEigenSolver}.
+
 Rozwiązaniem takiego problemu jest $2N_y$ wartości i wektorów własnych.
 Ze względu na to jak zdefiniowany był nasz problem interesuje nas jedynie połowa wartości i wektorów (skróconych o połowę) własnych.
 Otrzymane funkcje własne $\mathbf{u}_n$ znormalizowano do 1.
+
 Uzyskane wyniki przedstawia Wykres \ref{ww-upw}.
 Widzimy, że uzyskano mody poprzeczne i zanikające. 
 Dla modów poprzecznych wyznaczono wartości $k_x^{-,n}$ (czerwone punkty na Wykresie \ref{dyspfile}) i $v_{-,n}$ oraz wykreślono funkcje falowe (Wykres \ref{popU}).
