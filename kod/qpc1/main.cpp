@@ -157,12 +157,15 @@ int main(){
     for (int i=0;i<liczba;i++) fprintf(kx2vfile,"%e,%e\n",kx2[i]*nm_to_bohr,v[i]);
     fclose(kx2vfile);
 
+    // obliczenie psi
+    
+
     // wspolczynnik transmisji
 
+    // zapisanie parametrów
     FILE *misc=fopen("misc.csv","w");
     fprintf(misc,"%lf,%d,%d,%e,%e",E*hartree_to_eV,Ny,Nx,xmin*bohr_to_nm,ymin*bohr_to_nm);
     fclose(misc);
-    
 
     // czystki 
     delete [] x;

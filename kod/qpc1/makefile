@@ -2,6 +2,10 @@ ifeq ($(OS),Windows_NT)
 	PC := python
 	RM := del /q
 	VR := @echo nie ma valgrinda na windowsie
+	RMDIR := rmdir /s /q
+	MV := move
+	DEVNULL := NUL 2>&1
+	SLASH = $(strip \)
 else
 	ifdef VIRTUAL_ENV
 		PC := python
@@ -10,6 +14,10 @@ else
 	endif
 	RM := rm -f
 	VR = valgrind ./$(EXEC)
+	RMDIR := rm -rf
+	MV := mv
+	DEVNULL := /dev/null
+	SLASH := /
 endif
 
 .SUFFIXES:
@@ -24,8 +32,12 @@ EXEC := main.out
 DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv kx2vfile.csv misc.csv
 MEDIA := dyspfile.png lfile.png uRe.png uIm.png popU.png
 SCRIPT := plot.py
+TEXNAME := spr
+TEX = $(TEXNAME).tex
+REPORT := sprawozdanie.pdf
+BUILDDIR := build
 
-all: $(MEDIA)
+all: $(REPORT)
 
 %.o: %.cpp $(HDRS)
 	$(CXX) $(CFLAGS) -o $@ $< -c
@@ -39,6 +51,10 @@ $(DATA): $(EXEC)
 $(MEDIA): $(SCRIPT) $(DATA)
 	$(PC) $<
 
+$(REPORT): $(TEX) $(MEDIA)
+	latexmk -pdf -interaction=nonstopmode -output-directory=build $< > $(DEVNULL)
+	$(MV) $(BUILDDIR)$(SLASH)$(TEXNAME).pdf $@ > $(DEVNULL)
+
 gotowe: $(EXEC)
 	./$<
 
@@ -50,5 +66,6 @@ clean:
 	$(RM) $(EXEC)
 	$(RM) $(DATA)
 	$(RM) $(MEDIA)
+	$(RMDIR) $(BUILDDIR)
 
 .PHONY: clean gotowe all safe

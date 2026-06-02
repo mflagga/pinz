@@ -5,7 +5,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
     "font.serif": ["Computer Modern Roman"],
-    "font.size": 16,
+    "font.size": 20,
     "text.latex.preamble": r"""
         \usepackage{siunitx}
         \DeclareSIUnit{\arbitrary}{a.u.}

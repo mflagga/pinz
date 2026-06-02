@@ -1,0 +1,121 @@
+\documentclass[final,a4paper,twocolumn,10pt]{report}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{comment}
+\usepackage{amssymb}
+\usepackage{polski}
+\usepackage[polish]{babel}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{yfonts}
+\usepackage{braket}
+\usepackage[margin=2cm]{geometry}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=red
+}
+\usepackage[nospace,polish]{varioref}
+\usepackage{siunitx}
+\DeclareSIUnit\litre{l}
+\DeclareSIUnit{\arbitrary}{a.u.}
+\sisetup{
+    per-mode=symbol,
+    exponent-product=\times,
+    range-units=repeat,
+    range-open-phrase={od },
+    output-decimal-marker={,}
+}
+
+%\usepackage[version=4]{mhchem}
+    
+% \usepackage{tikz}
+% \usetikzlibrary{positioning, arrows.meta, calc}
+
+% \usepackage{listings}
+% \lstset{
+%   basicstyle=\ttfamily\small,
+%   breaklines=false,
+%   frame=single
+% }
+
+\captionsetup[figure]{name=Wykres}
+
+\title{\Huge{\textgoth{Quantum Point Contact}}}
+\author{\Huge{\textfrak{Maciej Flaga}}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\chapter{Realizacja}
+
+\section{Relacja dyspersji}
+
+Zaczęto od wyznaczenia relacji dyspersji dla układu jednorodnego ($V=0$). 
+W tym celu założono symetrię translacyjną wzdłuż $x$ i skupiono się na pojedynczym przekroju (komórce elementarnej).
+Rozwiązano problem własny oznaczony numerem (5) w treści zadania wielokrotnie dla różnych wartości $k_x$ z pierwszej strefy Brillouina -- każdorazowo otrzymując $N_y$ wartości własnych.  
+W tym celu posłużono się biblioteką \texttt{GSL} i jej funkcją \texttt{gsl\_eigen\_symm} ze względu na rzeczywistą, symetryczną postać hamiltonianu.
+Wykreślono poszczególne poziomy energetyczne w funkcji pędu (Wykres \ref{dyspfile}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{dyspfile.png}
+    \caption{Relacja dyspersji}
+    \label{dyspfile}
+\end{figure}
+
+\section{Mody poprzeczne}
+
+Kolejnym krokiem było wyznaczenie modów poprzecznych poprzez rozwiązanie uogólnionego problemu własnego. 
+Ze względu na to, że \texttt{GSL} nie obsługuje zespolonych macierzy niehermitowskich zdecydowano posłużyć się biblioteką \texttt{Eigen}. 
+Zaprogramowano funkcję \texttt{upw\_inv}.
+Funkcja rozwiązuje problem poprzez najpierw odwrócenie macierzy diagonalnej B i sprowadzenie uogólnionego problemu własnego do zwykłego problemu własnego a następnie korzysta z gotowej funkcji \texttt{ComplexEigenSolver}.
+Rozwiązaniem takiego problemu jest $2N_y$ wartości i wektorów własnych.
+Ze względu na to jak zdefiniowany był nasz problem interesuje nas jedynie połowa wartości i wektorów (skróconych o połowę) własnych.
+Otrzymane funkcje własne $\mathbf{u}_n$ znormalizowano do 1.
+Uzyskane wyniki przedstawia Wykres \ref{ww-upw}.
+Widzimy, że uzyskano mody poprzeczne i zanikające. 
+Dla modów poprzecznych wyznaczono wartości $k_x^{-,n}$ (czerwone punkty na Wykresie \ref{dyspfile}) i $v_{-,n}$ oraz wykreślono funkcje falowe (Wykres \ref{popU}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{popU.png}
+    \caption{Znormalizowane mody poprzeczne}
+    \label{popU}
+\end{figure}
+
+\begin{figure*}[t]
+    \begin{subfigure}[t]{\linewidth}
+        \centering
+        \includegraphics[width=0.6\linewidth]{lfile.png}
+        \label{lfile}
+        \caption{Moduł wartości własnych $|\lambda_{-,n}|$}
+    \end{subfigure}
+    \vfill
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{uRe.png}
+        \caption{Część rzeczywista wektorów własnych}
+        \label{uRe}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{uIm.png}
+        \caption{Część urojona wektorów własnych}
+        \label{uIm}
+    \end{subfigure}
+    \caption{Rozwiązanie uogólnionego problemu własnego}
+    \label{ww-upw}
+\end{figure*}
+
+\end{document}
