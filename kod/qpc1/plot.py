@@ -1,7 +1,16 @@
 # pyright: reportUndefinedVariable=false
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rcParams.update({"text.usetex":True, "font.size": 16})
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "serif",
+    "font.serif": ["Computer Modern Roman"],
+    "font.size": 16,
+    "text.latex.preamble": r"""
+        \usepackage{siunitx}
+        \DeclareSIUnit{\arbitrary}{a.u.}
+    """,
+})
 
 def wczytaj(*nazwy): # funkcja do wczytywania plikow od clauda
     for nazwa in nazwy:
