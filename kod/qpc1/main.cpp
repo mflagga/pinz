@@ -114,7 +114,7 @@ int main(){
         if (i!=0) fprintf(poprzecznefile,",");
         fprintf(poprzecznefile,"%d",poprzeczne[i]);
         for (int j=0;j<Ny;j++){
-            fprintf(ufile,"%e,%e\n",std::real(evecs[i*Ny+j]),std::imag(evecs[i*Ny+j]));
+            fprintf(ufile,"%e,%e\n",std::real(evecs[i*Ny+j])*1.0/std::sqrt(bohr_to_nm),std::imag(evecs[i*Ny+j])*1.0/std::sqrt(bohr_to_nm));
         }
     }
     fclose(lfile);
