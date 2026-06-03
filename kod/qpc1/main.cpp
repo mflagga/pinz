@@ -15,6 +15,11 @@ int main(){
     const double ymin=-10.0*nm_to_bohr;
     const double E=0.2*eV_to_hartree;
     const double ymax=-ymin;
+    double Vparam[]={
+        300.0*nm_to_bohr, // sigma_x
+        300.0*nm_to_bohr, // sigma_y
+        -0.05 // V_gates
+    };
 
     // parametry symulacji
     const int Nx=1*10-1;
@@ -156,7 +161,7 @@ int main(){
 
     // obliczenie psi
     double *V=new double[Nx*Ny]{};
-    initV_QPC(V,Nx,Ny,x,y,ymin,ymax,nm_to_bohr);
+    initV_QPC(V,Nx,Ny,x,y,ymin,ymax,Vparam);
     cmp **psin = new cmp*[liczba];
     for (int l=0;l<liczba;l++) psin[l] = new cmp[Nx*Ny];
 
