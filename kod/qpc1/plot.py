@@ -46,7 +46,8 @@ size = 8
 #     if j<4: print(dyspfile[:,j].min())
 
 # relacja dyspersji
-plt.figure(figsize=(1.25*size,size))
+ratio = 1.15
+plt.figure(figsize=(ratio*size,size/ratio))
 for j in range(len(dyspfile[0])):
     plt.plot(kxfile,dyspfile[:,j],c="tab:blue")
 plt.scatter(kx2vfile[:,0],Evec,c='r')
@@ -61,19 +62,22 @@ plt.savefig("dyspfile.png",dpi=150)
 plt.close()
 
 # wszystkie wartosci wlasne upw
-plt.figure(figsize=(2.4*size,size))
+ratio=1.3
+plt.figure(figsize=(ratio*size,size/ratio))
 plt.scatter(range(len(lfile)),lfile)
 plt.axhline(1.0,ls='--',c='k')
 plt.xlabel(r"$n$")
 plt.ylabel(r"$|\lambda_n^\pm|$")
+plt.grid(ls=":")
 plt.tight_layout()
 plt.savefig("lfile.png",dpi=150)
 plt.close()
 
 # wszystkie wektory wlasne upw
 # Re
+ratio=1.48
 Remax = np.abs(uRe).max()
-plt.figure(figsize=(2.4*size,size))
+plt.figure(figsize=(ratio*size,size/ratio))
 plt.imshow(uRe.T,origin='lower',cmap='bwr',vmin=-Remax,vmax=Remax)
 plt.colorbar()
 plt.title(r"$\Re(u^-)\ [\unit{\arbitrary}]$")
@@ -83,7 +87,7 @@ plt.savefig("uRe.png",dpi=150)
 plt.close()
 # Im
 Immax = np.abs(uIm).max()
-plt.figure(figsize=(2.4*size,size))
+plt.figure(figsize=(ratio*size,size/ratio))
 plt.imshow(uIm.T,origin='lower',cmap='bwr',vmin=-Immax,vmax=Immax)
 plt.colorbar()
 plt.title(r"$\Im(u^-)\ [\unit{\arbitrary}]$")
@@ -94,8 +98,9 @@ plt.close()
 
 # mody poprzeczne
 # Re
+ratio=1.2
 licznik=0
-plt.figure(figsize=(size,size))
+plt.figure(figsize=(ratio*size,size/ratio))
 for j in range(Ny):
     if (poprzecznefile[j]): 
         plt.plot(y,uRe[j],label=rf"$\Re(u_{{-,{licznik}}})$")
@@ -104,11 +109,14 @@ for j in range(Ny):
 plt.xlabel(r"$y\ [\unit{\nano\meter}]$")
 plt.ylabel(r"$u_{-,n}\ [\unit{\arbitrary}]$")
 plt.legend()
+plt.grid(ls=":")
 plt.tight_layout()
 plt.savefig("popU.png",dpi=150)
 plt.close()
 
-plt.figure(figsize=(size,size))
-plt.imshow(psifile[-1,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+ratio=xmin/ymin*1.7
+plt.figure(figsize=(ratio*size,size/ratio))
+plt.imshow(psifile[0,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
 plt.colorbar()
+plt.tight_layout()
 plt.savefig("psifile.png",dpi=150)
