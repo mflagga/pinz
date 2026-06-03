@@ -32,9 +32,6 @@ int main(){
     for (int i=0;i<Nx;i++) x[i]=xmin+(i+1)*dx;
     double *y=new double[Ny];
     for (int j=0;j<Ny;j++) y[j]=ymin+(j+1)*dx;
-    double *V=new double[Nx*Ny]{};
-    cmp **psi = new cmp*[Nx];
-    for (int i=0;i<Nx;i++) psi[i] = new cmp[Ny]{};
     cmp *H=new cmp[Ny*Ny]{};
 
     // wyznacznanie realcji dyspersji
@@ -158,21 +155,42 @@ int main(){
     fclose(kx2vfile);
 
     // obliczenie psi
-    
+    double *V=new double[Nx*Ny]{};
+    cmp **psin = new cmp*[liczba];
+    for (int l=0;l<liczba;l++) psin[l] = new cmp[Nx*Ny];
+
+    double c_in=1.0;
+
+    for (int l=0;l<liczba;l++){
+        znajdzPsi(psin[l],alpha,c_in,evecs_pop,l,Nx,Ny,evals_pop[l],liczba,E,V);
+    }
+
+    // zapisanie psi
+    FILE *psifile = fopen("psifile.csv","w");
+    for (int l=0;l<liczba;l++){
+        for (int i=0;i<Nx;i++){
+            for (int j=0;j<Ny;j++){
+                if (i!=0 || j!=0) fprintf(psifile,",");
+                fprintf(psifile,"%lf",std::norm(psin[l][i*Ny+j]));
+            }
+        }
+        fprintf(psifile,"\n");
+    }
+    fclose(psifile);
 
     // wspolczynnik transmisji
 
     // zapisanie parametrów
     FILE *misc=fopen("misc.csv","w");
-    fprintf(misc,"%lf,%d,%d,%e,%e",E*hartree_to_eV,Ny,Nx,xmin*bohr_to_nm,ymin*bohr_to_nm);
+    fprintf(misc,"%lf,%d,%d,%e,%e,%d",E*hartree_to_eV,Ny,Nx,xmin*bohr_to_nm,ymin*bohr_to_nm,liczba);
     fclose(misc);
 
     // czystki 
     delete [] x;
     delete [] y;
     delete [] V;
-    for (int i=0;i<Nx;i++) delete [] psi[i];
-    delete [] psi;
+    for (int l=0;l<liczba;l++) delete [] psin[l];
+    delete [] psin;
     delete [] H;
     for (int i=0;i<Nk;i++) delete [] dysp[i];
     delete [] dysp;

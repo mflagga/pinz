@@ -17,20 +17,24 @@ def wczytaj(*nazwy): # funkcja do wczytywania plikow od clauda
         globals()[nazwa] = np.loadtxt(nazwa + ".csv", delimiter=',')
 
 # wczytanie plików
-wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc")
+wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc","psifile")
 
 E=misc[0]
 Ny = int(misc[1])
 Nx = int(misc[2])
 xmin=misc[3]
 ymin=misc[4]
+liczba=int(misc[5])
 kx2vfile = np.atleast_2d(kx2vfile)
+psifile = np.atleast_2d(psifile)
 uRe = ufile[:,0].reshape(Ny,Ny)
 uIm = ufile[:,1].reshape(Ny,Ny)
 poprzecznefile = poprzecznefile.astype(bool)
 Evec=np.ones(len(kx2vfile[:,0]))*E
 dx=-2*xmin/(Nx+1)
 dy=-2*ymin/(Ny+1)
+# for l in range(liczba):
+#     psifile[l].reshape(Nx,Ny)
 
 x=np.linspace(xmin+dx,-xmin-dx,Nx)
 y=np.linspace(ymin+dy,-ymin-dy,Ny)
@@ -101,3 +105,8 @@ plt.legend()
 plt.tight_layout()
 plt.savefig("popU.png",dpi=150)
 plt.close()
+
+plt.figure(figsize=(size,size))
+plt.imshow(psifile[1,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+plt.colorbar()
+plt.savefig("psifile.png",dpi=150)

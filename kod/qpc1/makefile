@@ -23,14 +23,14 @@ endif
 .SUFFIXES:
 
 CXX := g++
-CFLAGS := -std=c++20 -Wall -Wextra -Werror -Wpedantic -I/usr/include/eigen3
+CFLAGS := -std=c++20 -Wall -Wextra -Werror -Wpedantic -I/usr/include/eigen3 -O3
 LIBS := -lm -lgsl -lgslcblas
 SRCS := main.cpp def.cpp
 HDRS := dek.hpp
 OBJS := main.o def.o
 EXEC := main.out
-DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv kx2vfile.csv misc.csv
-MEDIA := dyspfile.png lfile.png uRe.png uIm.png popU.png
+DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv kx2vfile.csv misc.csv psifile.csv
+MEDIA := dyspfile.png lfile.png uRe.png uIm.png popU.png psifile.png
 SCRIPT := plot.py
 TEXNAME := spr
 TEX = $(TEXNAME).tex

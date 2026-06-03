@@ -80,3 +80,63 @@ void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
 //         }
 //     }
 // }
+
+void znajdzPsi(cmp *psi, double alpha, double c_in, cmp *evecs_pop, int l, int Nx, int Ny, cmp lambdanminus, int liczba, double E, double *V){
+    cmp lambdanplus = 1.0/lambdanminus;
+    cmp deltaplus = 1.0-1.0/lambdanplus;
+    cmp deltaminus = 1.0-1.0/lambdanminus;
+    // wektor wyrazow wolnych
+    Eigen::VectorXcd www_eig = Eigen::VectorXcd::Zero(Nx*Ny);
+    for (int j=0;j<Ny;j++){
+        www_eig(j) = -alpha*c_in*evecs_pop[l*Ny+j]*(deltaplus-deltaminus);
+    }
+    // macierz
+    Eigen::MatrixXcd M = Eigen::MatrixXcd::Zero(Nx*Ny,Nx*Ny);
+    // hamiltonian
+    Eigen::MatrixXcd H_eig = Eigen::MatrixXcd::Zero(Ny,Ny);
+    H_eig.diagonal(-1).setConstant(-alpha);
+    H_eig.diagonal(+1).setConstant(-alpha);
+    // macierz tau
+    Eigen::MatrixXcd tau = Eigen::MatrixXcd::Zero(Ny,Ny);
+    tau.diagonal().setConstant(-alpha);
+    // macierze alfa i beta
+    Eigen::MatrixXcd alphaM(Ny,Ny);
+    Eigen::MatrixXcd betaM(Ny,Ny);
+    for (int mu=0;mu<Ny;mu++){
+        for (int ni=0;ni<Ny;ni++){
+            alphaM(mu,ni)=0.0;
+            betaM(mu,ni)=0.0;
+            for (int n=0;n<liczba;n++){
+                alphaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*deltaminus;
+                betaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*deltaplus; // tu moze byc blad (deltaplus)
+            }
+        }
+    }
+    // wypelnianie macierzy
+    for (int i=0;i<Nx;i++){
+        // wypelnienie diagonali hamiltonianu
+        for (int j=0;j<Ny;j++) H_eig(j,j) = 4.0*alpha + V[i*Ny+j];
+        // wypelnienie macierzy
+        if (i==0){
+            M.block(i*Ny,i*Ny,Ny,Ny) = H_eig - E*Eigen::MatrixXcd::Identity(Ny,Ny) + tau - tau*alphaM;
+        }
+        else if (i==Nx-1){
+            M.block(i*Ny,i*Ny,Ny,Ny) = H_eig - E*Eigen::MatrixXcd::Identity(Ny,Ny) + tau.adjoint() - tau.adjoint()*betaM;
+        }
+        else{
+            M.block(i*Ny,i*Ny,Ny,Ny) = H_eig - E*Eigen::MatrixXcd::Identity(Ny,Ny);
+        }
+        if (i!=Nx-1){
+            M.block((i+1)*Ny,i*Ny,Ny,Ny) = tau;
+            M.block(i*Ny,(i+1)*Ny,Ny,Ny) = tau.adjoint();
+        }
+    }
+    // rozwiazanie
+    Eigen::VectorXcd psi_eig = M.lu().solve(www_eig);
+    // zapisanie
+    for (int i=0;i<Nx;i++){
+        for (int j=0;j<Ny;j++){
+            psi[i*Ny+j] = psi_eig(i*Ny+j);
+        }
+    }
+}
