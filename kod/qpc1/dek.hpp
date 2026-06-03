@@ -18,5 +18,7 @@ void diagRealSymmEvals(cmp *H, int N, cmp *eval);
 void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs);
 // void MrazyM(cmp *A, cmp *B, cmp *C, int n, int m, int p);
 void znajdzPsi(cmp *psi, double alpha, double c_in, cmp *evecs_pop, int l, int Nx, int Ny, cmp *evals_pop, int liczba, double E, double *V);
+int deltaK(int n, int m);
+void initV_QPC(double *V, int Nx, int Ny, double *x, double *y, double ymin, double ymax, double nm_to_bohr);
 
 #endif

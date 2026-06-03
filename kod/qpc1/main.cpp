@@ -13,10 +13,8 @@ int main(){
     const double xmin=-5.0*nm_to_bohr;
     // const double xmax=-xmin;
     const double ymin=-10.0*nm_to_bohr;
+    const double E=0.2*eV_to_hartree;
     const double ymax=-ymin;
-    // const double sigmax=300.0;
-    // const double sigmay=300.0;
-    const double E=0.4*eV_to_hartree;
 
     // parametry symulacji
     const int Nx=1*10-1;
@@ -158,6 +156,7 @@ int main(){
 
     // obliczenie psi
     double *V=new double[Nx*Ny]{};
+    initV_QPC(V,Nx,Ny,x,y,ymin,ymax,nm_to_bohr);
     cmp **psin = new cmp*[liczba];
     for (int l=0;l<liczba;l++) psin[l] = new cmp[Nx*Ny];
 
@@ -182,6 +181,32 @@ int main(){
 
     // wspolczynnik transmisji
 
+    // wsp c_out d_out
+    cmp *c_out = new cmp[liczba]{};
+    cmp *d_out = new cmp[liczba]{};
+    double *Tn = new double[liczba]{};
+    double *Rn = new double[liczba]{};
+    double T{}, R{};
+
+    for (int n=0;n<liczba;n++){
+        for (int m=0;m<liczba;m++){
+            c_out[m]=0.0; d_out[m]=0.0;
+            for (int ni=0;ni<Ny;ni++){
+                c_out[m] += std::conj(evecs_pop[m*Ny+ni])*psin[n][ni];
+                d_out[m] += std::conj(evecs_pop[m*Ny+ni])*psin[n][(Nx-1)*Ny+ni];
+            }
+            c_out[m] -= cmp(deltaK(n,m));
+            Tn[n] += std::norm(d_out[m]/c_in)*std::abs(v[m]/v[n]);
+            Rn[n] += std::norm(c_out[m]/c_in)*std::abs(v[m]/v[n]);
+        }
+        T+=Tn[n];
+        R+=Rn[n];
+    }
+
+    printf("T=%e\nR=%e\n",T,R);
+
+    // wsp T R
+
     // zapisanie parametrów
     FILE *misc=fopen("misc.csv","w");
     fprintf(misc,"%lf,%d,%d,%e,%e,%d",E*hartree_to_eV,Ny,Nx,xmin*bohr_to_nm,ymin*bohr_to_nm,liczba);
@@ -203,6 +228,10 @@ int main(){
     delete [] evals_pop;
     delete [] evecs_pop;
     delete [] kx2;
+    delete [] c_out;
+    delete [] d_out;
+    delete [] Tn;
+    delete [] Rn;
 
     // return zero
     return 0;

@@ -142,3 +142,18 @@ void znajdzPsi(cmp *psi, double alpha, double c_in, cmp *evecs_pop, int l, int N
         }
     }
 }
+
+int deltaK(int n, int m){
+    return n==m?1:0;
+}
+
+void initV_QPC(double *V, int Nx, int Ny, double *x, double *y, double ymin, double ymax, double nm_to_bohr){
+    const double sigmax=300.0*nm_to_bohr;
+    const double sigmay=300.0*nm_to_bohr;
+    const double Vg=-0.05;
+    for (int i=0;i<Nx;i++){
+        for (int j=0;j<Ny;j++){
+            V[i*Ny+j]=-0.035*Vg*(std::exp(-std::pow(std::pow(x[i]/sigmax,2)+std::pow((y[j]-ymin)/sigmay,2),2))+std::exp(-std::pow(std::pow(x[i]/sigmax,2)+std::pow((y[j]-ymax)/sigmay,2),2)));
+        }
+    }
+}
