@@ -76,54 +76,56 @@ int main(){
 
     // uogólniony problem własny
 
-    cmp *evals = new cmp[Ny];
-    cmp *evecs = new cmp[Ny*Ny];
+    cmp *evals = new cmp[2*Ny];
+    cmp *evecs = new cmp[2*Ny*Ny];
     upw_inv(E,alpha,Ny,evals,evecs);
 
     // normowanie funckji wlasnych
     double sum, invsqrtsum;
-    for (int i=0;i<Ny;i++){
+    for (int i=0;i<2*Ny;i++){
         sum=0.0;
-        for (int j=0;j<Ny;j++) sum += std::norm(evecs[i*Ny+j])*dx;
+        for (int j=0;j<Ny;j++) sum += std::norm(evecs[i*Ny+j]);
         invsqrtsum=1.0/std::sqrt(sum);
         for (int j=0;j<Ny;j++) evecs[i*Ny+j]*=invsqrtsum;
     }
 
     // znalezienie modów poprzecznych
     int liczba=0;
-    bool *poprzeczne = new bool[Ny]{};
+    bool *poprzeczne = new bool[2*Ny]{};
     double eps=1e-8;
-    for (int i=0;i<Ny;i++){
+    for (int i=0;i<2*Ny;i++){
         if (std::abs(evals[i])>=1.0-eps && std::abs(evals[i])<=1.0+eps){
             poprzeczne[i]=true;
             liczba++;
         }
     }
+    liczba/=2;
     printf("Liczba modów poprzecznych: %d\n",liczba);
 
     // zapisanie
     FILE *lfile=fopen("lfile.csv","w");
     FILE *ufile=fopen("ufile.csv","w");
     FILE *poprzecznefile=fopen("poprzecznefile.csv","w");
-    for (int i=0;i<Ny;i++){
+    for (int i=0;i<2*Ny;i++){
         if (i!=0) fprintf(lfile,",");
         fprintf(lfile,"%e",std::abs(evals[i]));
         if (i!=0) fprintf(poprzecznefile,",");
         fprintf(poprzecznefile,"%d",poprzeczne[i]);
         for (int j=0;j<Ny;j++){
-            fprintf(ufile,"%e,%e\n",std::real(evecs[i*Ny+j])*1.0/std::sqrt(bohr_to_nm),std::imag(evecs[i*Ny+j])*1.0/std::sqrt(bohr_to_nm));
+            fprintf(ufile,"%e,%e\n",std::real(evecs[i*Ny+j]),std::imag(evecs[i*Ny+j]));
         }
     }
     fclose(lfile);
     fclose(ufile);
     fclose(poprzecznefile);
 
+    // zapisanie tylko ujemnych wartosci i wektorow
     cmp *evals_pop = new cmp[liczba];
     cmp *evecs_pop = new cmp[liczba*Ny];
 
     int l=0;
-    for (int i=0;i<Ny;i++){
-        if (poprzeczne[i]){
+    for (int i=0;i<2*Ny;i++){
+        if (poprzeczne[i] && std::imag(evals[i])<0.0){
             evals_pop[l]=evals[i];
             for (int j=0;j<Ny;j++){
                 evecs_pop[l*Ny+j] = evecs[i*Ny+j];

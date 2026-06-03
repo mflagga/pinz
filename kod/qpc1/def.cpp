@@ -62,7 +62,8 @@ void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
     // wektory i wartości wł
     Eigen::VectorXcd evals_eig = solver.eigenvalues();
     Eigen::MatrixXcd evecs_eig = solver.eigenvectors();
-    for (int i=0;i<Ny;i++){
+    // zapisanie 2Ny wartosci i wektorow (o polowe krotszych)
+    for (int i=0;i<2*Ny;i++){
         evals[i] = evals_eig(i);
         for (int j=0;j<Ny;j++){
             evecs[i*Ny+j] = evecs_eig(j,i);
@@ -109,7 +110,7 @@ void znajdzPsi(cmp *psi, double alpha, double c_in, cmp *evecs_pop, int l, int N
             betaM(mu,ni)=0.0;
             for (int n=0;n<liczba;n++){
                 alphaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*(1.0-1.0/evals_pop[n]);
-                betaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*(1.0-1.0/evals_pop[n]); // tu moze byc blad (lambda/delta)
+                betaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*(1.0-1.0/evals_pop[n]);
             }
         }
     }

@@ -84,7 +84,7 @@ Zaprogramowano funkcję \texttt{upw\_inv}.
 Funkcja rozwiązuje problem poprzez najpierw odwrócenie macierzy diagonalnej B i sprowadzenie uogólnionego problemu własnego do zwykłego problemu własnego a następnie korzysta z gotowej funkcji \texttt{ComplexEigenSolver}.
 
 Rozwiązaniem takiego problemu jest $2N_y$ wartości i wektorów własnych.
-Ze względu na to jak zdefiniowany był nasz problem interesuje nas jedynie połowa wartości i wektorów (skróconych o połowę) własnych.
+Ze względu na to jak zdefiniowany był nasz problem interesuje nas jedynie połowa wartości i wektorów (skróconych o połowę)\footnote{Ze względu na próby debugowania, kod zwraca $2N_y$ wartości i wektorów własnych (wciąż skróconych o połowę) a następnie nakładany jest warunek $|\lambda|=1 \wedge  \Im(\lambda)<0$ do wyznaczenia $\lambda_{-,n}$}.
 Otrzymane funkcje własne $\mathbf{u}_n$ znormalizowano do 1.
 
 Uzyskane wyniki przedstawia Wykres \ref{ww-upw}.
@@ -99,21 +99,22 @@ Dla modów poprzecznych wyznaczono wartości $k_x^{-,n}$ (czerwone punkty na Wyk
 \end{figure}
 
 \begin{figure*}[t]
-    \begin{subfigure}[t]{\linewidth}
+    \centering
+    \begin{subfigure}[t]{0.8\linewidth}
         \centering
-        \includegraphics[width=0.6\linewidth]{lfile.png}
+        \includegraphics[width=\linewidth]{lfile.png}
         \label{lfile}
         \caption{Moduł wartości własnych $|\lambda_{-,n}|$}
     \end{subfigure}
     \vfill
-    \begin{subfigure}[b]{0.49\linewidth}
+    \begin{subfigure}[b]{\linewidth}
         \centering
         \includegraphics[width=\linewidth]{uRe.png}
         \caption{Część rzeczywista wektorów własnych}
         \label{uRe}
     \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\linewidth}
+    \vfill
+    \begin{subfigure}[b]{\linewidth}
         \centering
         \includegraphics[width=\linewidth]{uIm.png}
         \caption{Część urojona wektorów własnych}
