@@ -13,11 +13,11 @@ int main(){
     const double xmin=-500.0*nm_to_bohr;
     // const double xmax=-xmin;
     const double ymin=-350.0*nm_to_bohr;
-    const double E=0.00043*eV_to_hartree;
+    const double E=0.015*eV_to_hartree;
     const double ymax=-ymin;
     double Vparam[]={
         300.0*nm_to_bohr, // sigma_x
-        200.0*nm_to_bohr, // sigma_y
+        300.0*nm_to_bohr, // sigma_y
         -0.7*eV_to_hartree // V_gates
     };
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału

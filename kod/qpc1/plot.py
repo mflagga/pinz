@@ -39,9 +39,9 @@ y=np.linspace(ymin+dy,-ymin-dy,Ny)
 
 size = 8
 
-print("Minima pasm:")
+print("\tMinima pasm:")
 for j in range(len(dyspfile[0])):
-    if j<4: print(dyspfile[:,j].min())
+    if j<4: print(f"\t{dyspfile[:,j].min():f}")
 
 # relacja dyspersji
 ratio = 1.15
@@ -114,7 +114,7 @@ plt.close()
 
 ratio=1.35
 plt.figure(figsize=(ratio*size,size/ratio))
-plt.imshow(psifile[2,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+plt.imshow(psifile[0,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
 plt.colorbar()
 plt.tight_layout()
 plt.savefig("psifile.png",dpi=150)
