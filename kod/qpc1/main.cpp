@@ -13,18 +13,18 @@ int main(){
     const double xmin=-500.0*nm_to_bohr;
     // const double xmax=-xmin;
     const double ymin=-350.0*nm_to_bohr;
-    const double E=0.015*eV_to_hartree;
+    const double E=0.0008*eV_to_hartree;
     const double ymax=-ymin;
     double Vparam[]={
         300.0*nm_to_bohr, // sigma_x
         300.0*nm_to_bohr, // sigma_y
-        -0.7*eV_to_hartree // V_gates
+        -0.9*eV_to_hartree // V_gates
     };
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału
 
     // parametry symulacji
-    const int Nx=49;
-    const int Ny=34;
+    const int Nx=int(50*1)-1;
+    const int Ny=int(35*1)-1;
     
     // parametry wtórne
     const double dx=(ymax-ymin)/(Ny+1);
@@ -104,7 +104,7 @@ int main(){
         }
     }
     liczba/=2;
-    printf("Liczba modów poprzecznych: %d\n",liczba);
+    printf("\tLiczba modów poprzecznych: %d\n",liczba);
 
     // zapisanie
     FILE *lfile=fopen("lfile.csv","w");
@@ -212,9 +212,9 @@ int main(){
         R+=Rn[n];
     }
     auto t1=std::chrono::high_resolution_clock::now();
-    std::cout<<"czas: "<<std::chrono::duration_cast<std::chrono::microseconds>(t1-t0)<<'\n';
+    std::cout<<"\tczas: "<<std::chrono::duration_cast<std::chrono::microseconds>(t1-t0)<<'\n';
 
-    printf("T=%e\nR=%e\n",T,R);
+    printf("\tT=%e\n\tR=%e\n",T,R);
 
     // zsumowane prawdopodobienstwo
     double *rho = new double[Nx*Ny];
