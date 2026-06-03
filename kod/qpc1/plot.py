@@ -17,7 +17,7 @@ def wczytaj(*nazwy): # funkcja do wczytywania plikow od clauda
         globals()[nazwa] = np.loadtxt(nazwa + ".csv", delimiter=',')
 
 # wczytanie plików
-wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc","psifile")
+wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc","psifile","potfile","rhofile")
 
 E=misc[0]
 Ny = int(misc[1])
@@ -33,17 +33,15 @@ poprzecznefile = poprzecznefile.astype(bool)
 Evec=np.ones(len(kx2vfile[:,0]))*E
 dx=-2*xmin/(Nx+1)
 dy=-2*ymin/(Ny+1)
-# for l in range(liczba):
-#     psifile[l].reshape(Nx,Ny)
 
 x=np.linspace(xmin+dx,-xmin-dx,Nx)
 y=np.linspace(ymin+dy,-ymin-dy,Ny)
 
 size = 8
 
-# print("Minima pasm:")
-# for j in range(len(dyspfile[0])):
-#     if j<4: print(dyspfile[:,j].min())
+print("Minima pasm:")
+for j in range(len(dyspfile[0])):
+    if j<4: print(dyspfile[:,j].min())
 
 # relacja dyspersji
 ratio = 1.15
@@ -114,9 +112,24 @@ plt.tight_layout()
 plt.savefig("popU.png",dpi=150)
 plt.close()
 
-ratio=xmin/ymin*1.7
+ratio=1.35
 plt.figure(figsize=(ratio*size,size/ratio))
-plt.imshow(psifile[0,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+plt.imshow(psifile[2,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
 plt.colorbar()
 plt.tight_layout()
 plt.savefig("psifile.png",dpi=150)
+plt.close()
+
+plt.figure(figsize=(ratio*size,size/ratio))
+plt.imshow(potfile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+plt.colorbar()
+plt.tight_layout()
+plt.savefig("potfile.png",dpi=150)
+plt.close()
+
+plt.figure(figsize=(ratio*size,size/ratio))
+plt.imshow(rhofile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+plt.colorbar()
+plt.tight_layout()
+plt.savefig("rhofile.png",dpi=150)
+plt.close()
