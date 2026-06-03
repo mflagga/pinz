@@ -162,7 +162,7 @@ int main(){
     double c_in=1.0;
 
     for (int l=0;l<liczba;l++){
-        znajdzPsi(psin[l],alpha,c_in,evecs_pop,l,Nx,Ny,evals_pop[l],liczba,E,V);
+        znajdzPsi(psin[l],alpha,c_in,evecs_pop,l,Nx,Ny,evals_pop,liczba,E,V);
     }
 
     // zapisanie psi

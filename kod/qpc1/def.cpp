@@ -81,7 +81,8 @@ void upw_inv(double E, double alpha, int Ny, cmp *evals, cmp *evecs){
 //     }
 // }
 
-void znajdzPsi(cmp *psi, double alpha, double c_in, cmp *evecs_pop, int l, int Nx, int Ny, cmp lambdanminus, int liczba, double E, double *V){
+void znajdzPsi(cmp *psi, double alpha, double c_in, cmp *evecs_pop, int l, int Nx, int Ny, cmp *evals_pop, int liczba, double E, double *V){
+    cmp lambdanminus = evals_pop[l];
     cmp lambdanplus = 1.0/lambdanminus;
     cmp deltaplus = 1.0-1.0/lambdanplus;
     cmp deltaminus = 1.0-1.0/lambdanminus;
@@ -107,8 +108,8 @@ void znajdzPsi(cmp *psi, double alpha, double c_in, cmp *evecs_pop, int l, int N
             alphaM(mu,ni)=0.0;
             betaM(mu,ni)=0.0;
             for (int n=0;n<liczba;n++){
-                alphaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*deltaminus;
-                betaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*deltaplus; // tu moze byc blad (deltaplus)
+                alphaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*(1.0-1.0/evals_pop[n]);
+                betaM(mu,ni) += std::conj(evecs_pop[n*Ny+ni])*evecs_pop[n*Ny+mu]*(1.0-1.0/evals_pop[n]); // tu moze byc blad (lambda/delta)
             }
         }
     }
