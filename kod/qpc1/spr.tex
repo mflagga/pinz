@@ -87,7 +87,6 @@ Rozwiązaniem takiego problemu jest $2N_y$ wartości i wektorów własnych.
 Ze względu na to jak zdefiniowany był nasz problem interesuje nas jedynie połowa wartości i wektorów (skróconych o połowę)\footnote{Ze względu na próby debugowania, kod zwraca $2N_y$ wartości i wektorów własnych (wciąż skróconych o połowę) a następnie nakładany jest warunek $|\lambda|=1 \wedge  \Im(\lambda)<0$ do wyznaczenia $\lambda_{-,n}$}.
 Otrzymane funkcje własne $\mathbf{u}_n$ znormalizowano do 1.
 
-Uzyskane wyniki przedstawia Wykres \ref{ww-upw}.
 Widzimy, że uzyskano mody poprzeczne i zanikające. 
 Dla modów poprzecznych wyznaczono wartości $k_x^{-,n}$ (czerwone punkty na Wykresie \ref{dyspfile}) i $v_{-,n}$ oraz wykreślono funkcje falowe (Wykres \ref{popU}).
 
@@ -97,32 +96,6 @@ Dla modów poprzecznych wyznaczono wartości $k_x^{-,n}$ (czerwone punkty na Wyk
     \caption{Znormalizowane mody poprzeczne}
     \label{popU}
 \end{figure}
-
-\begin{figure*}[t]
-    \centering
-    \begin{subfigure}[t]{\linewidth}
-        \centering
-        \includegraphics[width=0.8\linewidth]{lfile.png}
-        \label{lfile}
-        \caption{Moduł wartości własnych $|\lambda_{-,n}|$}
-    \end{subfigure}
-    \vfill
-    \begin{subfigure}[b]{\linewidth}
-        \centering
-        \includegraphics[width=0.8\linewidth]{uRe.png}
-        \caption{Część rzeczywista wektorów własnych}
-        \label{uRe}
-    \end{subfigure}
-    \vfill
-    \begin{subfigure}[b]{\linewidth}
-        \centering
-        \includegraphics[width=0.8\linewidth]{uIm.png}
-        \caption{Część urojona wektorów własnych}
-        \label{uIm}
-    \end{subfigure}
-    \caption{Połowa rozwiązania uogólnionego problemu własnego}
-    \label{ww-upw}
-\end{figure*}
 
 \section{Współczynnik Transmisji}
 

@@ -18,7 +18,7 @@ int main(){
     double Vparam[]={
         300.0*nm_to_bohr, // sigma_x
         300.0*nm_to_bohr, // sigma_y
-        -0.7*eV_to_hartree // V_gates
+        -0.82*eV_to_hartree // V_gates
     };
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału
 
@@ -243,7 +243,7 @@ int main(){
 
     // zapisanie parametrów
     FILE *misc=fopen("misc.csv","w");
-    fprintf(misc,"%lf,%d,%d,%e,%e,%d",E*hartree_to_eV,Ny,Nx,xmin*bohr_to_nm,ymin*bohr_to_nm,liczba);
+    fprintf(misc,"%lf,%d,%d,%e,%e,%d,%lf",E*hartree_to_eV,Ny,Nx,xmin*bohr_to_nm,ymin*bohr_to_nm,liczba,Vparam[2]*hartree_to_eV);
     fclose(misc);
 
     // czystki 

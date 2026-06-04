@@ -29,6 +29,7 @@ Nx = int(misc[2])
 xmin=misc[3]
 ymin=misc[4]
 liczba=int(misc[5])
+Vgates=misc[6]
 kx2vfile = np.atleast_2d(kx2vfile)
 psifile = np.atleast_2d(psifile)
 uRe = ufile[:,0].reshape(2*Ny,Ny)
@@ -115,7 +116,7 @@ plt.close()
 # norma wybranego modu
 ratio=1.3
 plt.figure(figsize=(ratio*size,size/ratio))
-plt.imshow(psifile[1,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+plt.imshow(psifile[5,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
 plt.colorbar()
 plt.tight_layout()
 plt.savefig("psifile.png",dpi=150)
@@ -138,7 +139,7 @@ plt.imshow(rhofile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -y
 plt.colorbar()
 plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
 plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
-plt.title(r"$\rho(x,y)=|\Psi(x,y)|^2$")
+plt.title(rf"$\rho(x,y)=|\Psi(x,y)|^2;\ V_{{gates}}=\qty{{{Vgates}}}{{\volt}}$")
 plt.tight_layout()
 plt.savefig("rhofile.png",dpi=150)
 plt.close()
