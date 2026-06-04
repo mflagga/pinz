@@ -32,7 +32,7 @@
     exponent-product=\times,
     range-units=repeat,
     range-open-phrase={od },
-    output-decimal-marker={,}
+    output-decimal-marker={.}
 }
 
 %\usepackage[version=4]{mhchem}
@@ -97,8 +97,33 @@ Dla modów poprzecznych wyznaczono wartości $k_x^{-,n}$ (czerwone punkty na Wyk
     \label{popU}
 \end{figure}
 
+Wykresy dla $E=\qty{0.2}{\electronvolt}$ przedstawione są na końcu sprawozdania.
+
 \section{Współczynnik Transmisji}
 
 \subsection{Znalezienie $\psi$}
+
+\onecolumn
+
+\section{Reszta wykresów}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/dyspfile02.png}
+        \caption{Relacja dyspersji}
+        \label{dyspfile02}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/popU02.png}
+        \caption{Mody poprzeczne}
+        \label{popU02}
+    \end{subfigure}
+    \caption{Wyniki dla $E=\qty{0.2}{\electronvolt}$}
+    \label{02}
+\end{figure}
 
 \end{document}

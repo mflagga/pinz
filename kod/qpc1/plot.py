@@ -116,7 +116,7 @@ plt.close()
 # norma wybranego modu
 ratio=1.3
 plt.figure(figsize=(ratio*size,size/ratio))
-plt.imshow(psifile[5,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+plt.imshow(psifile[0,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
 plt.colorbar()
 plt.tight_layout()
 plt.savefig("psifile.png",dpi=150)
