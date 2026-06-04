@@ -13,19 +13,19 @@ int main(){
     const double xmin=-500.0*nm_to_bohr;
     // const double xmax=-xmin;
     const double ymin=-350.0*nm_to_bohr;
-    const double E=0.0012*eV_to_hartree;
+    const double E=0.002*eV_to_hartree;
     const double ymax=-ymin;
     double Vparam[]={
-        100.0*nm_to_bohr, // sigma_x
-        150.0*nm_to_bohr, // sigma_y
+        300.0*nm_to_bohr, // sigma_x
+        300.0*nm_to_bohr, // sigma_y
         -1.3*eV_to_hartree // V_gates
     };
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału
 
     // parametry symulacji
-    const int Nx=int(50*0.8)-1;
-    const int Ny=int(35*0.8)-1;
-    
+    const int Nx=int(50*0.6)-1;
+    const int Ny=int(35*0.6)-1;
+
     // parametry wtórne
     const double dx=(ymax-ymin)/(Ny+1);
     // const double dy=(ymax-ymin)/(Ny-1);
@@ -160,10 +160,14 @@ int main(){
     for (int i=0;i<liczba;i++) fprintf(kx2vfile,"%e,%e\n",kx2[i]*nm_to_bohr,v[i]);
     fclose(kx2vfile);
 
+    // petla po Vg 
+    FILE *TRfile=fopen("TRfile.csv","w");
+    for (double Vg=-1.3*eV_to_hartree;Vg<-0.7*eV_to_hartree;Vg+=0.05*eV_to_hartree){
     auto t0=std::chrono::high_resolution_clock::now();
 
     // obliczenie psi
     double *V=new double[Nx*Ny]{};
+    Vparam[2]=Vg;
     initV_QPC(V,Nx,Ny,x,y,ymin,ymax,Vparam);
     cmp **psin = new cmp*[liczba];
     for (int l=0;l<liczba;l++) psin[l] = new cmp[Nx*Ny];
@@ -175,17 +179,17 @@ int main(){
     }
 
     // zapisanie psi
-    FILE *psifile = fopen("psifile.csv","w");
-    for (int l=0;l<liczba;l++){
-        for (int i=0;i<Nx;i++){
-            for (int j=0;j<Ny;j++){
-                if (i!=0 || j!=0) fprintf(psifile,",");
-                fprintf(psifile,"%lf",std::norm(psin[l][i*Ny+j]));
-            }
-        }
-        fprintf(psifile,"\n");
-    }
-    fclose(psifile);
+    // FILE *psifile = fopen("psifile.csv","w");
+    // for (int l=0;l<liczba;l++){
+    //     for (int i=0;i<Nx;i++){
+    //         for (int j=0;j<Ny;j++){
+    //             if (i!=0 || j!=0) fprintf(psifile,",");
+    //             fprintf(psifile,"%lf",std::norm(psin[l][i*Ny+j]));
+    //         }
+    //     }
+    //     fprintf(psifile,"\n");
+    // }
+    // fclose(psifile);
 
     // wspolczynnik transmisji
 
@@ -212,34 +216,43 @@ int main(){
         R+=Rn[n];
     }
     auto t1=std::chrono::high_resolution_clock::now();
-    std::cout<<"\tczas: "<<std::chrono::duration_cast<std::chrono::microseconds>(t1-t0)<<'\n';
+    std::cout<<"\tczas: "<<std::chrono::duration_cast<std::chrono::milliseconds>(t1-t0)<<'\n';
 
-    printf("\tT=%e\n\tR=%e\n",T,R);
+    fprintf(TRfile,"%lf,%e,%e\n",Vg*hartree_to_eV,T,R);
+    delete [] V;
+    delete [] c_out;
+    delete [] d_out;
+    delete [] Tn;
+    delete [] Rn;
+    for (int l=0;l<liczba;l++) delete [] psin[l];
+    delete [] psin;
+    }
+    fclose(TRfile);
 
     // zsumowane prawdopodobienstwo
-    double *rho = new double[Nx*Ny];
-    FILE *rhofile=fopen("rhofile.csv","w");
-    for (int i=0;i<Nx;i++){
-        for (int j=0;j<Ny;j++){
-            rho[i*Ny+j]=0.0;
-            for (int n=0;n<liczba;n++){
-                rho[i*Ny+j] += std::norm(psin[n][i*Ny+j]);
-            }
-            if (i!=0 || j!=0) fprintf(rhofile,",");
-            fprintf(rhofile,"%lf",rho[i*Ny+j]);
-        }
-    }
-    fclose(rhofile);
+    // double *rho = new double[Nx*Ny];
+    // FILE *rhofile=fopen("rhofile.csv","w");
+    // for (int i=0;i<Nx;i++){
+    //     for (int j=0;j<Ny;j++){
+    //         rho[i*Ny+j]=0.0;
+    //         for (int n=0;n<liczba;n++){
+    //             rho[i*Ny+j] += std::norm(psin[n][i*Ny+j]);
+    //         }
+    //         if (i!=0 || j!=0) fprintf(rhofile,",");
+    //         fprintf(rhofile,"%lf",rho[i*Ny+j]);
+    //     }
+    // }
+    // fclose(rhofile);
 
     // zapisanie potecjalu
-    FILE *potfile=fopen("potfile.csv","w");
-    for (int i=0;i<Nx;i++){
-        for (int j=0;j<Ny;j++){
-            if (i!=0 || j!=0) fprintf(potfile,",");
-            fprintf(potfile,"%lf",V[i*Ny+j]*hartree_to_eV);
-        }
-    }
-    fclose(potfile);
+    // FILE *potfile=fopen("potfile.csv","w");
+    // for (int i=0;i<Nx;i++){
+    //     for (int j=0;j<Ny;j++){
+    //         if (i!=0 || j!=0) fprintf(potfile,",");
+    //         fprintf(potfile,"%lf",V[i*Ny+j]*hartree_to_eV);
+    //     }
+    // }
+    // fclose(potfile);
 
     // zapisanie parametrów
     FILE *misc=fopen("misc.csv","w");
@@ -249,9 +262,6 @@ int main(){
     // czystki 
     delete [] x;
     delete [] y;
-    delete [] V;
-    for (int l=0;l<liczba;l++) delete [] psin[l];
-    delete [] psin;
     delete [] H;
     for (int i=0;i<Nk;i++) delete [] dysp[i];
     delete [] dysp;
@@ -262,11 +272,6 @@ int main(){
     delete [] evals_pop;
     delete [] evecs_pop;
     delete [] kx2;
-    delete [] c_out;
-    delete [] d_out;
-    delete [] Tn;
-    delete [] Rn;
-    delete [] rho;
 
     // return zero
     return 0;

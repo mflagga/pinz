@@ -17,7 +17,7 @@ def wczytaj(*nazwy): # funkcja do wczytywania plikow od clauda
         globals()[nazwa] = np.loadtxt(nazwa + ".csv", delimiter=',')
 
 # wczytanie plików
-wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc","psifile","potfile","rhofile")
+wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc","TRfile")
 
 print("\tMinima pasm:")
 for j in range(len(dyspfile[0])):
@@ -30,7 +30,7 @@ xmin=misc[3]
 ymin=misc[4]
 liczba=int(misc[5])
 kx2vfile = np.atleast_2d(kx2vfile)
-psifile = np.atleast_2d(psifile)
+# psifile = np.atleast_2d(psifile)
 uRe = ufile[:,0].reshape(2*Ny,Ny)
 uIm = ufile[:,1].reshape(2*Ny,Ny)
 poprzecznefile = poprzecznefile.astype(bool)
@@ -113,32 +113,39 @@ plt.savefig("popU.png",dpi=150)
 plt.close()
 
 # norma wybranego modu
-ratio=1.3
-plt.figure(figsize=(ratio*size,size/ratio))
-plt.imshow(psifile[1,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
-plt.colorbar()
-plt.tight_layout()
-plt.savefig("psifile.png",dpi=150)
-plt.close()
+# ratio=1.3
+# plt.figure(figsize=(ratio*size,size/ratio))
+# plt.imshow(psifile[1,:].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+# plt.colorbar()
+# plt.tight_layout()
+# plt.savefig("psifile.png",dpi=150)
+# plt.close()
 
 # potencjal
-plt.figure(figsize=(ratio*size,size/ratio))
-plt.imshow(potfile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
-plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
-plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
-plt.title(r"$V(x,y)\ [\unit{\volt}]$")
-plt.colorbar()
-plt.tight_layout()
-plt.savefig("potfile.png",dpi=150)
-plt.close()
+# plt.figure(figsize=(ratio*size,size/ratio))
+# plt.imshow(potfile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+# plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
+# plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
+# plt.title(r"$V(x,y)\ [\unit{\volt}]$")
+# plt.colorbar()
+# plt.tight_layout()
+# plt.savefig("potfile.png",dpi=150)
+# plt.close()
 
 # gestosc prawdopodobienstwa
-plt.figure(figsize=(ratio*size,size/ratio))
-plt.imshow(rhofile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
-plt.colorbar()
-plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
-plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
-plt.title(r"$\rho(x,y)=|\Psi(x,y)|^2$")
-plt.tight_layout()
-plt.savefig("rhofile.png",dpi=150)
-plt.close()
+# plt.figure(figsize=(ratio*size,size/ratio))
+# plt.imshow(rhofile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+# plt.colorbar()
+# plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
+# plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
+# plt.title(r"$\rho(x,y)=|\Psi(x,y)|^2$")
+# plt.tight_layout()
+# plt.savefig("rhofile.png",dpi=150)
+# plt.close()
+
+ratio=1.0
+plt.figure(figsize=(size*ratio,size/ratio))
+plt.plot(TRfile[:,0],TRfile[:,1], label=r'$T$')
+# plt.plot(TRfile[:,0],TRfile[:,2], label=r'$R$')
+# plt.plot(TRfile[:,0],TRfile[:,1]+TRfile[:,2], label=r'$T+R$')
+plt.savefig("TRfile.png",dpi=150)
