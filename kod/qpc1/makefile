@@ -61,6 +61,10 @@ gotowe: $(EXEC)
 safe: $(EXEC)
 	$(VR)
 
+rep: $(TEX)
+	latexmk -pdf -interaction=nonstopmode -output-directory=build $< > $(DEVNULL)
+	$(MV) $(BUILDDIR)$(SLASH)$(TEXNAME).pdf $(REPORT) > $(DEVNULL)
+
 clean:
 	$(RM) $(OBJS)
 	$(RM) $(EXEC)
