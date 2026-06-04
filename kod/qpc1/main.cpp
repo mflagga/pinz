@@ -13,18 +13,18 @@ int main(){
     const double xmin=-500.0*nm_to_bohr;
     // const double xmax=-xmin;
     const double ymin=-350.0*nm_to_bohr;
-    const double E=0.0012*eV_to_hartree;
+    const double E=0.015*eV_to_hartree;
     const double ymax=-ymin;
     double Vparam[]={
-        100.0*nm_to_bohr, // sigma_x
-        150.0*nm_to_bohr, // sigma_y
-        -1.3*eV_to_hartree // V_gates
+        300.0*nm_to_bohr, // sigma_x
+        300.0*nm_to_bohr, // sigma_y
+        -0.7*eV_to_hartree // V_gates
     };
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału
 
     // parametry symulacji
-    const int Nx=int(50*0.8)-1;
-    const int Ny=int(35*0.8)-1;
+    const int Nx=int(50*1)-1;
+    const int Ny=int(35*1)-1;
     
     // parametry wtórne
     const double dx=(ymax-ymin)/(Ny+1);
@@ -212,9 +212,9 @@ int main(){
         R+=Rn[n];
     }
     auto t1=std::chrono::high_resolution_clock::now();
-    std::cout<<"\tczas: "<<std::chrono::duration_cast<std::chrono::microseconds>(t1-t0)<<'\n';
+    std::cout<<"\tczas: "<<std::chrono::duration_cast<std::chrono::milliseconds>(t1-t0)<<'\n';
 
-    printf("\tT=%e\n\tR=%e\n",T,R);
+    printf("\tT=%lf\n\tR=%lf\n",T,R);
 
     // zsumowane prawdopodobienstwo
     double *rho = new double[Nx*Ny];
