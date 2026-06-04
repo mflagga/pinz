@@ -13,18 +13,18 @@ int main(){
     const double xmin=-500.0*nm_to_bohr;
     // const double xmax=-xmin;
     const double ymin=-350.0*nm_to_bohr;
-    const double E=0.0008*eV_to_hartree;
+    const double E=0.0012*eV_to_hartree;
     const double ymax=-ymin;
     double Vparam[]={
-        300.0*nm_to_bohr, // sigma_x
-        300.0*nm_to_bohr, // sigma_y
-        -0.9*eV_to_hartree // V_gates
+        100.0*nm_to_bohr, // sigma_x
+        150.0*nm_to_bohr, // sigma_y
+        -1.3*eV_to_hartree // V_gates
     };
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału
 
     // parametry symulacji
-    const int Nx=int(50*1)-1;
-    const int Ny=int(35*1)-1;
+    const int Nx=int(50*0.8)-1;
+    const int Ny=int(35*0.8)-1;
     
     // parametry wtórne
     const double dx=(ymax-ymin)/(Ny+1);
