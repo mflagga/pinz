@@ -73,4 +73,4 @@ clean:
 	$(RMDIR) $(BUILDDIR)
 	$(RM) $(REPORT)
 
-.PHONY: clean gotowe all safe
+.PHONY: clean gotowe all safe rep
