@@ -23,8 +23,8 @@ int main(){
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału
 
     // parametry symulacji
-    const int Nx=int(50*1)-1;
-    const int Ny=int(35*1)-1;
+    const int Nx=int(50*0.6)-1;
+    const int Ny=int(35*0.6)-1;
 
     // parametry wtórne
     const double dx=(ymax-ymin)/(Ny+1);
@@ -162,7 +162,7 @@ int main(){
 
     // petla po Vg 
     FILE *TRfile=fopen("TRfile.csv","w");
-    for (double Vg=-0.7*eV_to_hartree;Vg<(-0.7+eps)*eV_to_hartree;Vg+=0.02*eV_to_hartree){
+    for (double Vg=-1.3*eV_to_hartree;Vg<(-0.7+eps)*eV_to_hartree;Vg+=0.1*eV_to_hartree){
     auto t0=std::chrono::high_resolution_clock::now();
 
     // obliczenie psi
