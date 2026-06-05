@@ -18,7 +18,7 @@ int main(){
     double Vparam[]={
         300.0*nm_to_bohr, // sigma_x
         300.0*nm_to_bohr, // sigma_y
-        -0.82*eV_to_hartree // V_gates
+        -1*eV_to_hartree // V_gates
     };
     Vparam[0]*=1; // żeby -Werror puściło bez potencjału
 

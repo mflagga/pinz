@@ -71,6 +71,6 @@ clean:
 	$(RM) $(DATA)
 	$(RM) $(MEDIA)
 	$(RMDIR) $(BUILDDIR)
-	$(RM) $(REPORT)
+# 	$(RM) $(REPORT)
 
 .PHONY: clean gotowe all safe rep
