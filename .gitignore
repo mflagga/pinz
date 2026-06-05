@@ -5,3 +5,5 @@
 *.pdf
 **/build/
 !**/figures/*.png
+*.mp4
+**/frames/

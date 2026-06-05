@@ -161,13 +161,14 @@ plt.savefig("TRfile.png",dpi=150)
 # gestosc prawdopodobienstwa
 os.makedirs("./frames",exist_ok=True)
 ratio=1.3
+rhomax=rhofile.max()
 for j in range(len(rhofile[:,0])):
     plt.figure(figsize=(ratio*size,size/ratio))
-    plt.imshow(rhofile[j].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+    plt.imshow(rhofile[j].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin],vmin=0,vmax=rhomax)
     plt.colorbar()
     plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
     plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
-    plt.title(r"$\rho(x,y,V_{gates})$" + '\n' + rf"V_{{gates}}=\qty{{{TRfile[j,0]}}}{{\volt}}")
+    plt.title(r"$\rho(x,y,V_{gates})$" + '\n' + rf"$V_{{gates}}=\qty{{{TRfile[j,0]}}}{{\volt}}$")
     plt.tight_layout()
     plt.savefig(f"frames/frame_{j:04d}.png",dpi=150)
     plt.close()

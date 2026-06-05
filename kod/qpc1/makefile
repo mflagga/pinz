@@ -48,13 +48,13 @@ $(EXEC): $(OBJS)
 $(DATA): $(EXEC)
 	./$<
 
-$(MEDIA): $(SCRIPT) $(DATA)
+$(MEDIA) frames/.framesdone: $(SCRIPT) $(DATA)
 	$(RMDIR) frames
 	$(PC) $<
 	touch frames/.framesdone
 
 anim.mp4: frames/.framesdone
-	
+	ffmpeg -framerate 5 -i frames/frame_%04d.png -y -loglevel quiet -crf 18 anim.mp4	
 
 $(REPORT): $(TEX) $(MEDIA)
 	latexmk -pdf -interaction=nonstopmode -output-directory=build $< > $(DEVNULL)
