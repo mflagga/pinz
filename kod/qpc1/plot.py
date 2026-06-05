@@ -160,15 +160,22 @@ plt.savefig("TRfile.png",dpi=150)
 
 # gestosc prawdopodobienstwa
 os.makedirs("./frames",exist_ok=True)
-ratio=1.3
+ratio=1.65
 rhomax=rhofile.max()
 for j in range(len(rhofile[:,0])):
-    plt.figure(figsize=(ratio*size,size/ratio))
-    plt.imshow(rhofile[j].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin],vmin=0,vmax=rhomax)
-    plt.colorbar()
-    plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
-    plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
-    plt.title(r"$\rho(x,y,V_{gates})$" + '\n' + rf"$V_{{gates}}=\qty{{{TRfile[j,0]}}}{{\volt}}$")
+    fig, axs = plt.subplots(1,2,figsize=(ratio*size,size/ratio))
+    im = axs[0].imshow(rhofile[j].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin],vmin=0,vmax=rhomax)
+    fig.colorbar(im, ax=axs[0])
+    # axs[0].set_xlabel(r"$x\ [\unit{\nano\meter}]$")
+    # axs[0].set_ylabel(r"$y\ [\unit{\nano\meter}]$")
+    # axs[0].set_title(r"$\rho(x,y,V_{gates})$")
+
+    axs[1].plot(TRfile[:,0],TRfile[:,1])
+    axs[1].scatter(TRfile[j,0],TRfile[j,1],c='r')
+    axs[1].grid(ls=":")
+    axs[1].set_xlabel(r"$V_{gates}\ [\unit{\volt}]$")
+    axs[1].set_ylabel(r"$G\ [\frac{2e^2}{h}]$")
+
     plt.tight_layout()
     plt.savefig(f"frames/frame_{j:04d}.png",dpi=150)
     plt.close()

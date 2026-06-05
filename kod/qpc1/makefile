@@ -49,7 +49,7 @@ $(DATA): $(EXEC)
 	./$<
 
 $(MEDIA) frames/.framesdone: $(SCRIPT) $(DATA)
-	$(RMDIR) frames
+	rm -f frames/*
 	$(PC) $<
 	touch frames/.framesdone
 
@@ -74,5 +74,6 @@ clean:
 	$(RMDIR) $(BUILDDIR)
 	$(RM) $(REPORT)
 	$(RMDIR) frames
+	$(RM) anim.mp4
 
 .PHONY: clean gotowe all safe

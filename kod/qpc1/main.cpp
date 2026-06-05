@@ -164,7 +164,7 @@ int main(){
     int licznik=0;
     FILE *TRfile=fopen("TRfile.csv","w");
     FILE *rhofile=fopen("rhofile.csv","w");
-    for (double Vg=-1.3*eV_to_hartree;Vg<(-0.6+eps)*eV_to_hartree;Vg+=0.02*eV_to_hartree){
+    for (double Vg=-1.3*eV_to_hartree;Vg<(-0.5+eps)*eV_to_hartree;Vg+=0.02*eV_to_hartree){
     auto t0=std::chrono::high_resolution_clock::now();
 
     // obliczenie psi
