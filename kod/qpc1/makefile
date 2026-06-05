@@ -29,7 +29,7 @@ SRCS := main.cpp def.cpp
 HDRS := dek.hpp
 OBJS := main.o def.o
 EXEC := main.out
-DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv kx2vfile.csv misc.csv TRfile.csv
+DATA := dyspfile.csv kxfile.csv lfile.csv ufile.csv poprzecznefile.csv kx2vfile.csv misc.csv TRfile.csv rhofile.csv
 MEDIA := dyspfile.png lfile.png uRe.png uIm.png popU.png Tfile.png Rfile.png TRfile.png
 SCRIPT := plot.py
 TEXNAME := spr
@@ -49,7 +49,12 @@ $(DATA): $(EXEC)
 	./$<
 
 $(MEDIA): $(SCRIPT) $(DATA)
+	$(RMDIR) frames
 	$(PC) $<
+	touch frames/.framesdone
+
+anim.mp4: frames/.framesdone
+	
 
 $(REPORT): $(TEX) $(MEDIA)
 	latexmk -pdf -interaction=nonstopmode -output-directory=build $< > $(DEVNULL)
@@ -68,5 +73,6 @@ clean:
 	$(RM) $(MEDIA)
 	$(RMDIR) $(BUILDDIR)
 	$(RM) $(REPORT)
+	$(RMDIR) frames
 
 .PHONY: clean gotowe all safe

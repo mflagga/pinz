@@ -161,7 +161,9 @@ int main(){
     fclose(kx2vfile);
 
     // petla po Vg 
+    int licznik=0;
     FILE *TRfile=fopen("TRfile.csv","w");
+    FILE *rhofile=fopen("rhofile.csv","w");
     for (double Vg=-1.3*eV_to_hartree;Vg<(-0.7+eps)*eV_to_hartree;Vg+=0.1*eV_to_hartree){
     auto t0=std::chrono::high_resolution_clock::now();
 
@@ -216,9 +218,25 @@ int main(){
         R+=Rn[n];
     }
     auto t1=std::chrono::high_resolution_clock::now();
-    std::cout<<"\tczas: "<<std::chrono::duration_cast<std::chrono::milliseconds>(t1-t0)<<'\n';
+    std::cout<<"\t"<<licznik<<"czas: "<<std::chrono::duration_cast<std::chrono::milliseconds>(t1-t0)<<'\n';
 
     fprintf(TRfile,"%lf,%e,%e\n",Vg*hartree_to_eV,T,R);
+
+    double *rho = new double[Nx*Ny];
+    for (int i=0;i<Nx;i++){
+        for (int j=0;j<Ny;j++){
+            rho[i*Ny+j]=0.0;
+            for (int n=0;n<liczba;n++){
+                rho[i*Ny+j] += std::norm(psin[n][i*Ny+j]);
+            }
+            if (i!=0 || j!=0) fprintf(rhofile,",");
+            fprintf(rhofile,"%lf",rho[i*Ny+j]);
+        }
+    }
+    fprintf(rhofile,"\n");
+
+    licznik++;
+
     delete [] V;
     delete [] c_out;
     delete [] d_out;
@@ -226,23 +244,12 @@ int main(){
     delete [] Rn;
     for (int l=0;l<liczba;l++) delete [] psin[l];
     delete [] psin;
+    delete [] rho;
     }
     fclose(TRfile);
 
     // zsumowane prawdopodobienstwo
-    // double *rho = new double[Nx*Ny];
-    // FILE *rhofile=fopen("rhofile.csv","w");
-    // for (int i=0;i<Nx;i++){
-    //     for (int j=0;j<Ny;j++){
-    //         rho[i*Ny+j]=0.0;
-    //         for (int n=0;n<liczba;n++){
-    //             rho[i*Ny+j] += std::norm(psin[n][i*Ny+j]);
-    //         }
-    //         if (i!=0 || j!=0) fprintf(rhofile,",");
-    //         fprintf(rhofile,"%lf",rho[i*Ny+j]);
-    //     }
-    // }
-    // fclose(rhofile);
+    fclose(rhofile);
 
     // zapisanie potecjalu
     // FILE *potfile=fopen("potfile.csv","w");

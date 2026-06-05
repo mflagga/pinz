@@ -1,6 +1,7 @@
 # pyright: reportUndefinedVariable=false
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
@@ -17,7 +18,7 @@ def wczytaj(*nazwy): # funkcja do wczytywania plikow od clauda
         globals()[nazwa] = np.loadtxt(nazwa + ".csv", delimiter=',')
 
 # wczytanie plików
-wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc","TRfile")
+wczytaj("dyspfile","kxfile","lfile","ufile","poprzecznefile","kx2vfile","misc","TRfile","rhofile")
 
 print("\tMinima pasm:")
 for j in range(len(dyspfile[0])):
@@ -132,17 +133,6 @@ plt.close()
 # plt.savefig("potfile.png",dpi=150)
 # plt.close()
 
-# gestosc prawdopodobienstwa
-# plt.figure(figsize=(ratio*size,size/ratio))
-# plt.imshow(rhofile.reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
-# plt.colorbar()
-# plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
-# plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
-# plt.title(r"$\rho(x,y)=|\Psi(x,y)|^2$")
-# plt.tight_layout()
-# plt.savefig("rhofile.png",dpi=150)
-# plt.close()
-
 ratio=1.0
 plt.figure(figsize=(size*ratio,size/ratio))
 plt.plot(TRfile[:,0],TRfile[:,1])
@@ -167,3 +157,17 @@ plt.ylabel(r"$T+R$")
 plt.grid(ls=":")
 plt.tight_layout()
 plt.savefig("TRfile.png",dpi=150)
+
+# gestosc prawdopodobienstwa
+os.makedirs("./frames",exist_ok=True)
+ratio=1.3
+for j in range(len(rhofile[:,0])):
+    plt.figure(figsize=(ratio*size,size/ratio))
+    plt.imshow(rhofile[j].reshape(Nx,Ny).T,origin='lower',extent=[xmin, -xmin, ymin, -ymin])
+    plt.colorbar()
+    plt.xlabel(r"$x\ [\unit{\nano\meter}]$")
+    plt.ylabel(r"$y\ [\unit{\nano\meter}]$")
+    plt.title(r"$\rho(x,y,V_{gates})$" + '\n' + rf"V_{{gates}}=\qty{{{TRfile[j,0]}}}{{\volt}}")
+    plt.tight_layout()
+    plt.savefig(f"frames/frame_{j:04d}.png",dpi=150)
+    plt.close()
